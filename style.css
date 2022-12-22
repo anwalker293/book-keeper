@@ -1,7 +1,7 @@
-@import url("https://fonts.googleapis.com/css2?family=Karla&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Karla:ital@1&display=swap");
 :root {
   --primary-color: #475c5c;
-  --border-radius: ;
+  --border-radius: 5px;
 }
 
 html {
@@ -17,23 +17,22 @@ body {
 }
 
 h1 {
-  color: white;
+  color: whitesmoke;
   padding: 20px;
-  background: rgb(0 0 0 / 50%);
+  background: rgb(0 0 0 / 0.5);
   border-radius: var(--border-radius);
   cursor: pointer;
   text-align: center;
   text-transform: uppercase;
-  width: 275px;
+  width: 300px;
   margin: 20px auto 10px;
   user-select: none;
 }
 
 h1:hover {
-  background: rgb(0 0 0 / 80%);
+  background: rgba(0, 0, 0, 0.8);
 }
 
-/* Bookmarks */
 .container {
   display: flex;
   flex-direction: row;
@@ -41,10 +40,10 @@ h1:hover {
 }
 
 .item {
-  background: rgba(0, 0, 0, 0.5);
-  color: white;
-  border-radius: var(--border-radius);
+  color: whitesmoke;
   padding: 20px;
+  background: rgba(0, 0, 0, 0.5);
+  border-radius: var(--border-radius);
   margin: 10px;
 }
 
@@ -60,13 +59,8 @@ a {
 
 a:link,
 a:visited {
-  color: white;
+  color: whitesmoke;
   text-decoration: none;
-}
-
-a:hover,
-a:active {
-  text-decoration: underline;
 }
 
 .fa-times {
@@ -80,6 +74,11 @@ a:active {
   margin-right: 20px;
 }
 
+a:hover,
+a:active {
+  text-decoration: underline;
+}
+
 .name img {
   height: 20px;
   width: 20px;
@@ -87,7 +86,7 @@ a:active {
   margin-right: 5px;
 }
 
-/* Modal */
+/*Modal*/
 .modal-container {
   background: rgba(0, 0, 0, 0.6);
   display: none;
@@ -98,7 +97,7 @@ a:active {
   bottom: 0;
 }
 
-.show-model {
+.show-modal {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -116,6 +115,7 @@ a:active {
   from {
     opacity: 0;
   }
+
   to {
     opacity: 1;
   }
@@ -131,7 +131,7 @@ a:active {
   cursor: pointer;
 }
 
-.model-header {
+.modal-header {
   background: var(--primary-color);
   color: white;
   padding: 15px;
@@ -146,7 +146,6 @@ h3 {
   background: whitesmoke;
 }
 
-/* Form */
 .form-group {
   height: 55px;
 }
@@ -167,24 +166,23 @@ h3 {
 
 button {
   cursor: pointer;
-  color: white;
+  color: whitesmoke;
   background: var(--primary-color);
   height: 30px;
   width: 100px;
-  border: none;
   border-radius: var(--border-radius);
+  border: none;
   margin-top: 10px;
 }
 
 button:hover {
-  filter: brightness(110%);
+  filter: brightness(115%);
 }
 
 button:focus {
   outline: none;
 }
 
-/* Media Query: Large Smartphones (Vertical) */
 @media screen and (max-width: 600px) {
   .container {
     flex-direction: column;
