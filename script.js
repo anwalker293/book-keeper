@@ -6,15 +6,15 @@ const websiteNameEl = document.getElementById("website-name");
 const websiteUrlEl = document.getElementById("website-url");
 const bookmarksContainer = document.getElementById("bookmarks-container");
 
-let bookmarksList = [];
+let bookmarks = [];
 
-// Show modal and focus on first input
-const showModal = () => {
+// Show Modal, Focus on Input
+function showModal() {
   modal.classList.add("show-modal");
   websiteNameEl.focus();
-};
+}
 
-// Model Event Listeners
+// Modal Event Listeners
 modalShow.addEventListener("click", showModal);
 modalClose.addEventListener("click", () =>
   modal.classList.remove("show-modal")
@@ -23,113 +23,118 @@ window.addEventListener("click", (e) =>
   e.target === modal ? modal.classList.remove("show-modal") : false
 );
 
-//Build bookmarks to DOM
-const buildBookmarks = () => {
-  //Remove all bookmarks
-  bookmarksContainer.textContent = "";
+// Validate Form
+function validate(nameValue, urlValue) {
+  const expression =
+    /(https)?:\/\/(www\.)?[-a-zA-Z0-9@:%._+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_+.~#?&//=]*)/g;
+  const regex = new RegExp(expression);
+  if (!nameValue || !urlValue) {
+    alert("Please submit values for both fields.");
+    return false;
+  }
+  if (!urlValue.match(regex)) {
+    alert("Please provide a valid web address.");
+    return false;
+  }
+  // Valid
+  return true;
+}
 
-  bookmarksList.forEach((bookmark) => {
+// Build Bookmarks
+function buildBookmarks() {
+  // Remove all bookmark elements
+  bookmarksContainer.textContent = "";
+  // Build items
+  bookmarks.forEach((bookmark) => {
     const { name, url } = bookmark;
-    //Item
+    // Item
     const item = document.createElement("div");
     item.classList.add("item");
-    //Close Icon
+    // Close Icon
     const closeIcon = document.createElement("i");
     closeIcon.classList.add("fas", "fa-times");
     closeIcon.setAttribute("title", "Delete Bookmark");
     closeIcon.setAttribute("onclick", `deleteBookmark('${url}')`);
-    //Favicon / Link Container
+    // Favicon / Link Container
     const linkInfo = document.createElement("div");
     linkInfo.classList.add("name");
-    //favicon
+    // Favicon
     const favicon = document.createElement("img");
     favicon.setAttribute(
       "src",
-      `https://www.google.com/s2/u/0/favicons?domain=${url}`
+      `https://s2.googleusercontent.com/s2/favicons?domain=${url}`
     );
     favicon.setAttribute("alt", "Favicon");
-    //link
+    // Link
     const link = document.createElement("a");
     link.setAttribute("href", `${url}`);
     link.setAttribute("target", "_blank");
     link.textContent = name;
-
-    //append to bookmarks container
+    // Append to bookmarks container
     linkInfo.append(favicon, link);
     item.append(closeIcon, linkInfo);
     bookmarksContainer.appendChild(item);
   });
-};
+}
 
-const fetchBookmarks = () => {
+// Fetch bookmarks
+function fetchBookmarks() {
+  // Get bookmarks from localStorage if available
   if (localStorage.getItem("bookmarks")) {
-    bookmarksList = JSON.parse(localStorage.getItem("bookmarks"));
+    bookmarks = JSON.parse(localStorage.getItem("bookmarks"));
   } else {
-    bookmarksList = [
+    // Create bookmarks array in localStorage
+    bookmarks = [
       {
         name: "Google",
         url: "https://google.com",
       },
     ];
-    localStorage.setItem("bookmarks", JSON.stringify(bookmarksList));
+    localStorage.setItem("bookmarks", JSON.stringify(bookmarks));
   }
   buildBookmarks();
-};
+}
 
-//Validate form
-
-const validateForm = (nameValue, urlValue) => {
-  const expression =
-    /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)/g;
-  const regex = new RegExp(expression);
-
-  if (!nameValue || !urlValue) {
-    alert("please fill both fields!");
-    return false;
-  }
-  if (!urlValue.match(regex)) {
-    alert("please provide valid email adress!");
-    return false;
-  }
-  return true;
-};
-
-//Delete item
-
-const deleteBookmark = (url) => {
-  bookmarksList.forEach((bookmark, i) => {
+// Delete Bookmark
+function deleteBookmark(url) {
+  // Loop through the bookmarks array
+  bookmarks.forEach((bookmark, i) => {
     if (bookmark.url === url) {
-      bookmarksList.splice(i, 1);
+      bookmarks.splice(i, 1);
     }
   });
-  //update bookmarks array in storage and re populate dom
-  localStorage.setItem("bookmarks", JSON.stringify(bookmarksList));
+  // Update bookmarks array in localStorage, re-populate DOM
+  localStorage.setItem("bookmarks", JSON.stringify(bookmarks));
   fetchBookmarks();
-};
+}
 
-const storeBookmarkForm = (e) => {
+function storeBookmark(e) {
   e.preventDefault();
   const nameValue = websiteNameEl.value;
   let urlValue = websiteUrlEl.value;
-
-  if (!urlValue.includes("http://") && !urlValue.includes("https://")) {
+  // Add 'https://' if not there
+  if (!urlValue.includes("https://") && !urlValue.includes("http://")) {
     urlValue = `https://${urlValue}`;
   }
-  if (!validateForm(nameValue, urlValue)) {
+  // Validate
+  if (!validate(nameValue, urlValue)) {
     return false;
   }
-
+  // Set bookmark object, add to array
   const bookmark = {
     name: nameValue,
     url: urlValue,
   };
-
-  bookmarksList.push(bookmark);
-  localStorage.setItem("bookmarks", JSON.stringify(bookmarksList));
+  bookmarks.push(bookmark);
+  // Set bookmarks in localStorage, fetch, reset input fields
+  localStorage.setItem("bookmarks", JSON.stringify(bookmarks));
   fetchBookmarks();
   bookmarkForm.reset();
   websiteNameEl.focus();
-};
+}
 
-bookmarkForm.addEventListener("submit", storeBookmarkForm);
+// Event Listener
+bookmarkForm.addEventListener("submit", storeBookmark);
+
+// On Load, Fetch Bookmarks
 fetchBookmarks();
